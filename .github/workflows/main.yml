@@ -1,0 +1,32 @@
+name: Build macOS App
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - name: Lấy mã nguồn
+      uses: actions/checkout@v4
+
+    - name: Cài đặt Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Cài đặt thư viện
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller openpyxl
+
+    - name: Đóng gói ứng dụng cho Mac
+      run: |
+        pyinstaller --onefile --windowed tracuuexcel.py
+
+    - name: Xuất file thành phẩm
+      uses: actions/upload-artifact@v4
+      with:
+        name: TraCuuExcel-macOS
+        path: dist/tracuuexcel.app
